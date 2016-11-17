@@ -103,6 +103,9 @@ return [
         ], 
         'login_id' => [
             'assigned' => 'あなたはアサインされていません。'
+        ], 
+        'name' => [
+            'alpha_spaces' => ':attributeはアルファベットとスペースのみを入力して下さい。',
         ] 
     ],
 
@@ -118,6 +121,7 @@ return [
     */
 
     'attributes' => [
+        'name' => 'お名前', 
         'email' => 'メールアドレス', 
         'cardNumber' => 'カード番号', 
         'cardExpirationDate' => 'カード有効期限', 

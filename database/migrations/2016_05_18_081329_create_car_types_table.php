@@ -19,6 +19,7 @@ class CreateCarTypesTable extends Migration
             $table->float('base');
             $table->float('per_mile');
             $table->float('cancel');
+            $table->tinyInteger('seat_num');
             $table->boolean('valid')->default(true);
             $table->dateTime('created_at');
             $table->dateTime('updated_at');

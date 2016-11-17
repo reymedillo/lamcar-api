@@ -207,13 +207,13 @@ class Car extends Model
         }
 
         //check cars available within miles
-        $cars = \App\Car::where('latitude','<>' ,'NULL') 
-        ->where('latitude','<>' , '')
-        ->where('longitude','<>' ,'NULL')
-        ->where('longitude','<>' , '')
-        ->where('location_update_date','>',\Carbon\Carbon::now()->subSeconds(config('define.seconds_available')) )
-        ->whereNotIn('id',$hired)
-        ->where('valid',true);
+        $cars = \App\Car::where('device_id', '<>', '')
+            ->where('device_type','<>' ,'') 
+            ->where('latitude','<>' , '')
+            ->where('longitude','<>' , '')
+            ->where('location_update_date','>',\Carbon\Carbon::now()->subSeconds(config('define.seconds_available')) )
+            ->whereNotIn('id',$hired)
+            ->where('valid',true);
 
         if(!is_null($type)){
             $cars->where('car_type_id', $type);

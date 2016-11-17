@@ -19,7 +19,7 @@ class CarType extends Model
 
         // get fare by distance
         $carTypes = DB::table('car_types')
-            ->select('id', 'name_'.\App::getLocale().' as name', 'base', 'per_mile')
+            ->select('id', 'name_'.\App::getLocale().' as name', 'base', 'per_mile', 'seat_num')
             ->where('valid', 1)
             ->get();
 
@@ -30,7 +30,7 @@ class CarType extends Model
         foreach($carTypes as $carType){
             $fares[] = [
                 "car_type_id" => $carType->id,
-                "car_type_name" => $carType->name,
+                "car_type_name" => $carType->name . "(" . trans('custom.max_people_num',['num' => $carType->seat_num]) . ")",
                 "fare" => $carType->base + floor($distance) * $carType->per_mile
             ];
         }

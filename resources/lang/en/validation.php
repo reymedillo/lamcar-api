@@ -103,6 +103,9 @@ return [
         ], 
         'login_id' => [
             'assigned' => 'You have not yet been assigned.'
+        ], 
+        'name' => [
+            'alpha_spaces' => 'The :attribute may only contain letters and spaces.',
         ] 
     ],
 

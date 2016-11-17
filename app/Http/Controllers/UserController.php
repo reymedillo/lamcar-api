@@ -93,8 +93,13 @@ class UserController extends Controller
             ], 412);
         }
 
+        Validator::extend('alpha_spaces', function($attribute, $value)
+        {
+            return preg_match('/^[a-zA-Z0-9\s]+$/u', $value);
+        });
+
         $validator = Validator::make($request->all(),[
-                'name' => 'required',
+                'name' => 'required|alpha_spaces',
                 'pickup_location' => 'required',
                 'pickup_latitude' => 'required|numeric',
                 'pickup_longitude'  => 'required|numeric',
@@ -108,7 +113,7 @@ class UserController extends Controller
 
         if($validator->fails()) {
             return response()->json([
-                'message' => trans('custom.fail_to',['name'=>'order']),
+                'message' => current($validator->errors()->all()),
                 'errors'  => $validator->errors()
             ], 422);
         }

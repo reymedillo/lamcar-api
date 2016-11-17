@@ -12,6 +12,8 @@ class BeforeMiddleware
     
     public function handle($request, Closure $next)
     {
+        \Log::info($request->url());
+        \Log::info($request->all());
 
         $api_client = $this->api_client($request);
         

@@ -49,4 +49,5 @@ return [
             '11'                => 'A duplicate transaction has been submitted.'
         ],
     ],
+    'max_people_num'                => 'max :num people',
 ];

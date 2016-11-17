@@ -12,13 +12,13 @@ return
         'cancel'                => 9,
     ],
     'add_api_token' => [
-        'days'                  => 0,
-        'hours'                 => 1,
+        'days'                  => 1,
+        'hours'                 => 0,
         'minutes'               => 0,
     ],
     'add_refresh_token' => [
-        'days'                  => 1,
-        'hours'                 => 0,
+        'days'                  => 0,
+        'hours'                 => 1,
         'minutes'               => 0,
     ],
     'add_payment_token' => [
@@ -47,7 +47,7 @@ return
             'held_for_review'   => 4
         ]
     ],
-    'miles_available'           => 10.0,
+    'miles_available'           => 3.0,
     'void_add_minutes'          => 10,
     'seconds_available'         => 60,
     'token_extension_time'      => 10
