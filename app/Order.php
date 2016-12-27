@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use Validator;
 
 class Order extends Model
 {
@@ -28,16 +28,16 @@ class Order extends Model
         'valid',
     ];
 
-    public static function getFilter() {
+    public static function getFilter($type=null) {
         return array (
             'orders.id',
             'orders.name', 
             'orders.contact', 
-            'orders.pickup_location',
+            (($type=='car')?'orders.pickup_location_en as pickup_location':'orders.pickup_location'),
             'orders.pickup_latitude',
             'orders.pickup_longitude',
             'orders.pickup_location_detail',
-            'orders.dropoff_location',
+            (($type=='car')?'orders.dropoff_location_en as dropoff_location':'orders.dropoff_location'),
             'orders.dropoff_latitude',
             'orders.dropoff_longitude', 
             'orders.dropoff_date',
@@ -51,6 +51,35 @@ class Order extends Model
         );
     }
 
+    public static function validateCreate($request)
+    {
+
+        Validator::extend('alpha_numeric_spaces', function($attribute, $value)
+        {
+            return preg_match('/^[a-zA-Z0-9\s]+$/u', $value);
+        });
+        Validator::extend('alpha_numeric_symbols', function($attribute, $value)
+        {
+            return preg_match('/^[a-zA-Z0-9\s\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]+$/u', $value);
+        });
+
+        return Validator::make($request->all(),[
+            'name' => 'required|alpha_numeric_spaces',
+            'pickup_location' => 'required',
+            'pickup_latitude' => 'required|numeric',
+            'pickup_longitude' => 'required|numeric',
+            'pickup_location_detail' => 'alpha_numeric_symbols',
+            'dropoff_location' => 'required',
+            'dropoff_latitude' => 'required|numeric',
+            'dropoff_longitude' => 'required|numeric',
+            'dropoff_location_detail' => 'alpha_numeric_symbols',
+            'distance'  => 'required',
+            'car_type_id'  => 'required',
+            'fare'  => 'required'
+        ]);
+
+    }
+ 
     public static function refineForCar($orders) {
 
         foreach($orders as $key => $order) {
@@ -73,9 +102,9 @@ class Order extends Model
         return array();
     }
 
-    public static function setFilter($refines = array()) {
+    public static function setFilter($refines = array(),$type=null) {
 
-        $filter = self::getFilter();
+        $filter = self::getFilter($type);
         $filter[] = "car_types.name_".\App::getLocale()." as car_type_name";
         $filter[] = "cars.number as car_number";
         $filter[] = "drivers.name as driver_name";
@@ -144,6 +173,60 @@ class Order extends Model
 
         return $orders;
          
+    }
+
+    public static function findLocationEN($lat,$long) {
+        $pickup = self::where('pickup_latitude', $lat)->where('pickup_longitude', $long)->whereNotNull('pickup_location_en')->first(['pickup_location_en']);
+        if(count($pickup)) {
+            return $pickup->pickup_location_en;
+        }
+        $dropoff = self::where('dropoff_latitude', $lat)->where('dropoff_longitude', $long)->whereNotNull('dropoff_location_en')->first(['dropoff_location_en']);
+        if(count($dropoff)) {
+            return $dropoff->dropoff_location_en;
+        }
+        return config('define.valid.false');
+    }
+
+    public static function connectGoogleMap($lat,$long) {
+        $url = sprintf('%s?latlng=%.f,%.f&key=%s&language=en&region=US',
+            config('google-geocoder.requestUrl'),
+            $lat,
+            $long,
+            config('google-geocoder.applicationKey')
+        );
+
+        try {
+            $api = file_get_contents($url);
+            $res = json_decode($api, true);
+            return $res['results'][0]['formatted_address'];
+        } catch (\Exception $e) {
+            \Mail::send('email.google.error', [
+                    'title' => trans('custom.fail_to',['name'=>'connect to API.']),
+                    'lat' => $lat,
+                    'long' => $long,
+                    'api_url' => $url
+                ], 
+                function ($m) {
+                    $m->from(env('MAIL_USERNAME'));
+                    $m->to(env('MAIL_USERNAME'), 'Administrator')->subject(trans('custom.error_occured'));
+            });
+            return null;
+        }
+    }
+
+    public static function checkLocationEN($order,$name) {
+        if(!preg_match('/^[a-zA-Z0-9\s\x21-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]+$/u', $order->{$name.'_location'})) {
+            $find_location_en = self::findLocationEN($order->{$name.'_latitude'},$order->{$name.'_longitude'});
+            if($find_location_en === config('define.valid.false')) {
+                \Log::info('connecting to GOOGLE MAP API');
+                $google_map = self::connectGoogleMap($order->{$name.'_latitude'},$order->{$name.'_longitude'});
+                return $google_map;
+            } else {
+                return $find_location_en;
+            }
+        } else {
+            return $order->{$name.'_location'};
+        }
     }
 
     public function payment() {

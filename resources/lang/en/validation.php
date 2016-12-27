@@ -97,6 +97,9 @@ return [
     'must1number' => 'The :attribute must be at least 1 numeric (1 - 9)',
     'must1special' => 'The :attribute must be at least 1 Non-alphanumeric (For example: !, $, #, or %)',
     
+    'alpha_numeric_spaces' => 'The :attribute may only contain letters and spaces.',
+    'alpha_numeric_symbols' => 'The :attribute may only contain letters and symbols.',
+
     'custom' => [
         'service_term' => [
             'required' => 'Please agree to the Terms of service.'
@@ -104,9 +107,6 @@ return [
         'login_id' => [
             'assigned' => 'You have not yet been assigned.'
         ], 
-        'name' => [
-            'alpha_spaces' => 'The :attribute may only contain letters and spaces.',
-        ] 
     ],
 
     /*

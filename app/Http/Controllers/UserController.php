@@ -93,27 +93,10 @@ class UserController extends Controller
             ], 412);
         }
 
-        Validator::extend('alpha_spaces', function($attribute, $value)
-        {
-            return preg_match('/^[a-zA-Z0-9\s]+$/u', $value);
-        });
-
-        $validator = Validator::make($request->all(),[
-                'name' => 'required|alpha_spaces',
-                'pickup_location' => 'required',
-                'pickup_latitude' => 'required|numeric',
-                'pickup_longitude'  => 'required|numeric',
-                'dropoff_location'  => 'required',
-                'dropoff_latitude'  => 'required|numeric',
-                'dropoff_longitude' => 'required|numeric',
-                'distance'  => 'required',
-                'car_type_id'  => 'required',
-                'fare'  => 'required'
-                ]);
-
+        $validator = Order::validateCreate($request);
         if($validator->fails()) {
             return response()->json([
-                'message' => current($validator->errors()->all()),
+                'message' => trans('custom.error_occured'),
                 'errors'  => $validator->errors()
             ], 422);
         }

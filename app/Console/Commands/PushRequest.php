@@ -48,6 +48,17 @@ class PushRequest extends Command
             return $this->error('There is no order data.');
         }
 
+        \DB::beginTransaction();
+        $order->pickup_location_en = \App\Order::checkLocationEN($order,'pickup');
+        $order->dropoff_location_en = \App\Order::checkLocationEN($order,'dropoff');
+
+        if($order->save()) {
+            \DB::commit();
+        } else {
+            \DB::rollBack();
+            return $this->error('There is error in saving location EN.');
+        }
+
         $cars = $this->car->getAvailableCars(
             $order->pickup_latitude,
             $order->pickup_longitude,

@@ -96,6 +96,8 @@ return [
     'must1_small_letter' => 'The :attribute must be at least 1 lowercase characters (a – z)',
     'must1number' => 'The :attribute must be at least 1 numeric (1 - 9)',
     'must1special' => 'The :attribute must be at least 1 Non-alphanumeric (For example: !, $, #, or %)',
+    'alpha_numeric_spaces' => ':attributeはアルファベットとスペースのみを入力して下さい。',
+    'alpha_numeric_symbols' => ':attributeはアルファベットと記号のみを入力して下さい。',
 
     'custom' => [
         'service_term' => [
@@ -104,9 +106,6 @@ return [
         'login_id' => [
             'assigned' => 'あなたはアサインされていません。'
         ], 
-        'name' => [
-            'alpha_spaces' => ':attributeはアルファベットとスペースのみを入力して下さい。',
-        ] 
     ],
 
     /*

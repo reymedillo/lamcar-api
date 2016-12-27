@@ -151,7 +151,7 @@ class CarController extends Controller
     protected function getOrder($car_id, $order_id)
     {
         $refines['id'] = $order_id;
-        $order = Order::setFilter($refines)->first();
+        $order = Order::setFilter($refines,'car')->first();
 
         if(!$order) {
             return response()->json('', 204);

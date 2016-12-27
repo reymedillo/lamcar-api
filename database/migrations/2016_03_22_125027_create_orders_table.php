@@ -18,10 +18,12 @@ class CreateOrdersTable extends Migration
             $table->string('name');
             $table->string('contact')->nullable()->default(null);
             $table->string('pickup_location');
+            $table->string('pickup_location_en')->nullable()->default(null);
             $table->string('pickup_latitude');
             $table->string('pickup_longitude');
             $table->string('pickup_location_detail')->nullable()->default(null);
             $table->string('dropoff_location');
+            $table->string('dropoff_location_en')->nullable()->default(null);
             $table->string('dropoff_latitude');
             $table->string('dropoff_longitude');
             $table->float('distance');
