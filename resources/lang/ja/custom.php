@@ -12,7 +12,7 @@ return [
     |
     |
     */
-    'error_occured'                 => 'An error occurred.',
+    'error_occured'                 => 'エラー',
     'fail_to'                       => 'It failed to :name .',
     'expired'                       => 'Enable expired.',
     'error_user_not_found'          => 'User not found',

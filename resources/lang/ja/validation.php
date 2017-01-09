@@ -126,6 +126,7 @@ return [
         'cardExpirationDate' => 'カード有効期限', 
         'cardCode' => 'カードセキュリティコード', 
         'cardName' => 'カード名義', 
+        'pickup_location_detail' => '乗車場所詳細', 
     ],
 
 
