@@ -13,7 +13,6 @@ class CarSeeder extends Seeder
     {
         \DB::table('cars')->insert([
         	'number' 				=> 2,
-        	'password'			=> bcrypt(1234),
         	'note'				=> 'car 2'
         ]);
     }
